@@ -3,6 +3,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
 
 const refs = {
+    input: document.querySelector('#datetime-picker'),
     btnStart: document.querySelector('[data-start]'),
     days: document.querySelector('[data-days]'),
     hours: document.querySelector('[data-hours]'),
@@ -24,40 +25,40 @@ const options = {
     console.log(selectedDates[0]);
     console.log(options.defaultDate);
 
-    if (selectedDates[0] <= options.defaultDate) {
+    deltaTime = selectedDates[0] - options.defaultDate;
+    refs.btnStart.setAttribute('disabled', '');
+
+    if (selectedDates[0] < options.defaultDate) {
       Notiflix.Notify.failure('Please choose a date in the future');
-      refs.btnStart.setAttribute('disabled', '');
       return;
 
     } refs.btnStart.removeAttribute('disabled');
-      deltaTime = selectedDates[0] - options.defaultDate;
-    
     }
 };
 
-
 const fp = flatpickr("#datetime-picker", options);
+
 disabledBtnOnStart();
 
 function disabledBtnOnStart() {
   refs.btnStart.setAttribute('disabled', '');
-}
+  }
 
 function onClickStartTimer() {
-   timerId = setInterval(() => {
+     timerId = setInterval(() => {
       if (deltaTime < 1000) {
         clearInterval(timerId);
         return;
-    }
+     }
     let countdown = convertMs(deltaTime -= 1000);
  
     refs.days.textContent = addLeadingZero(countdown.days);
     refs.hours.textContent = addLeadingZero(countdown.hours);
     refs.minutes.textContent = addLeadingZero(countdown.minutes);
     refs.seconds.textContent = addLeadingZero(countdown.seconds);
-   
   }, 1000);
   refs.btnStart.setAttribute('disabled', '');
+  refs.input.setAttribute('disabled', '');
 }
  
 function addLeadingZero(value) {
